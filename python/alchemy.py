@@ -29,4 +29,5 @@ store1 = Store('GS25','1243') 	#instance 만들기
 
 Base.metadata.create_all(engine)
 
+print ('nothik')
 
