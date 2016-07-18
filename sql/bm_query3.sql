@@ -1,6 +1,6 @@
 # Q21
 SELECT Gender, SUM(Unitprice*OrderQuantity) as totalpurchaseprice,
-	count(*) as Freq, ROUND(AVG(Unitprice*OrderQuantity),0) as Avgpurchaseprice		#ROUND로 반올림
+	count(*) as Freq, ROUND(AVG(Unitprice*OrderQuantity),0) as Avgpurchaseprice	#ROUND로 반올림
 FROM prod, purchase, customer
 WHERE prod.prodID=purchase.prodID and purchase.CustomerID=customer.CustomerID
 GROUP BY Gender;
@@ -13,7 +13,7 @@ WHERE prod.prodID=purchase.prodID and purchase.CustomerID=customer.CustomerID
 GROUP BY Address, Gender;
 
 # Q23
-SELECT FLOOR(age/10) as Agegroup, Gender, SUM(Unitprice*OrderQuantity) as 			#FLOOR로 버림
+SELECT FLOOR(age/10) as Agegroup, Gender, SUM(Unitprice*OrderQuantity) as 		#FLOOR로 소수점 버림
 	totalpurchaseprice,	count(*) as Freq, ROUND(AVG(Unitprice*OrderQuantity),0) as Avgpurchaseprice
 FROM prod, purchase, customer
 WHERE prod.prodID=purchase.prodID and purchase.CustomerID=customer.CustomerID
