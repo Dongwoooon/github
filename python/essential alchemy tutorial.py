@@ -54,6 +54,8 @@ stmt.execute(user_name='rick', password='secret', display_name
 	='Rick Copeland') 			#created column에는 입력 안 해주면 default값 들어감
 stmt.execute(user_name='rick1', password='secret', display_name
 	='Rick Copeland Clone')
+stmt.execute(user_name='rick2', password='secret', display_name
+	='Rick Copeland Clone 2')
 
 stmt = user_table.select()		#data select
 result = stmt.execute()
@@ -63,22 +65,26 @@ for row in result:
 stmt = user_table.select(user_table.c.user_name=='rick')	#condition맞게 select(where 역할), table.c. : c가 column을 의미
 print (stmt.execute().fetchall())		#fetchall : row 전부 다 뽑기
 
-# Create an update constrained by user name
-stmt = user_table.update(user_table.c.user_name=='rick')
-# Execute the update, setting the password column to secret123
-stmt.execute(password='secret123')
-<sqlalchemy.engine.base.ResultProxy object at 0xa20c50>
-# Create a delete statement that deletes all users
-# except for 'rick'
-stmt = user_table.delete(user_table.c.user_name != 'rick')
+
+stmt = user_table.update(user_table.c.user_name=='rick') #name='rick'인 row update 할래
+stmt.execute(password='secret123')	#password를 secret123으로 update
+
+stmt = user_table.delete(user_table.c.user_name != 'rick') #name='rick'인 row 말고 다 지울래
 stmt.execute()
-<sqlalchemy.engine.base.ResultProxy object at 0x2b12bf430210>
-# Select the users back from the database
-user_table.select().execute().fetchall()
+
+user_table.select().execute().fetchall() #user table에 있는 row 전부 뽑기
+'''
+실행시키면 나오는 결과 :
 [(1, u'rick', u'secret123', u'Rick Copeland', datetime.datetime(2007, 9, 7, 18, 35, 35, 529412))]
-# Add the users back
-stmt = user_table.insert()
-stmt.execute(user_name='rick1', password='secret', display_name='Rick Copeland Clone')
-<sqlalchemy.engine.base.ResultProxy object at 0xa20c90>
-stmt.execute(user_name='rick2', password='secret', display_name='Rick Copeland Clone 2')
-<sqlalchemy.engine.base.ResultProxy object at 0xa20cd0>
+(name=rick인 row만 살았음, password가 secret123으로 바뀜)
+'''
+#지운거 다시 살릴거임
+stmt = user_table.insert()			
+stmt.execute(user_name='rick1', password='secret', display_name
+	='Rick Copeland Clone')
+stmt.execute(user_name='rick2', password='secret', display_name
+	='Rick Copeland Clone 2')
+
+
+### Mapping Objects to Tables
+
