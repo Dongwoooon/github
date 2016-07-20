@@ -27,4 +27,4 @@ Store.__mapper__
 
 store1 = Store('GS25','1243') 	#instance 만들기
 
-Base.metadata.create_all(engine)
+Base.metadata.create_all(engine) #engine으로 연결된 DB에 만든 table(metadata) 생성 
