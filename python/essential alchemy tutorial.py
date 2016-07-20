@@ -62,12 +62,12 @@ result = stmt.execute()
 for row in result:
 	print (row)					#table에 있는 row 전부 출력
 
-stmt = user_table.select(user_table.c.user_name=='rick')	#condition맞게 select(where 역할), table.c. : c가 column을 의미
-print (stmt.execute().fetchall())		#fetchall : row 전부 다 뽑기
+stmt = user_table.select(user_table.c.user_name=='rick') #.select(select_condition), table.c.=table의 column
+print (stmt.execute().fetchall())			#fetchall : row 전부 다 뽑기
 
 
 stmt = user_table.update(user_table.c.user_name=='rick') #name='rick'인 row update 할래
-stmt.execute(password='secret123')	#password를 secret123으로 update
+stmt.execute(password='secret123')				#password를 secret123으로 update
 
 stmt = user_table.delete(user_table.c.user_name != 'rick') #name='rick'인 row 말고 다 지울래
 stmt.execute()
@@ -87,4 +87,57 @@ stmt.execute(user_name='rick2', password='secret', display_name
 
 
 ### Mapping Objects to Tables
+from sqlalchemy.orm import *
+class User(object): pass 		#mapping할 class 생성
+class Group(object): pass
+class Permission(object): pass
 
+mapper(User, user_table)		#class에 아까 만든 table을 mapping(User=user_table)
+mapper(Group, group_table)
+mapper(Permission, permission_table)
+
+Session = sessionmaker()		#session class 선언
+session = Session()				#session instance 생성
+
+query = session.query(User)		#User class object를 이용, query class 선언	
+'query class : returns ORM-mapped objects, interacts with an ORM session'
+print(list(query))
+'''
+실행시키면 나오는 결과
+[<__main__.User object at 0xb688d0>, <__main__.User object at 0xb68910>,
+<__main__.User object at 0xb68c10>]
+User class = user_table의 3개 row가 list의 각 성분에 대응
+'''
+
+for user in query:				#query에 있는 row 불러오기
+	print user.user_name
+
+query.get(1)					#get(primary key) : key에 해당하는 object 불러오기(여기선 1st row)
+
+for user in query.filter_by(display_name='Rick Copeland'):	#filter_by(filter_condition)
+	print user.id, user.user_name, user.password
+
+for user in query.filter(User.c.user_name.like('rick%')):	#sql에서 like'text'랑 같음(%, _ 사용)
+	print user.id, user.user_name, user.password
+
+newuser = User()				#db에 새 object 추가해보자
+newuser.user_name = 'mike'
+newuser.password = 'password'
+session.save(newuser)			#session에게 새 obejct를 알려줌
+
+print(len(list(user_table.select().execute()))) #결과가 3으로 나옴
+query.count()					#결과가 4로 나옴 
+'''
+session에 저장 후 db와 임시 동기화(flush) 따로 해야 함
+ORM 쓰는 순간 auto-flushing(session.flush())실행, session과 db가 임시 연동
+sessionmaker( )쓸 때 flush=False하면 auto-flushing 제거
+진짜 연동해서 db 수정하고 싶으면 commit 사용 
+'''
+newuser.password = 'password1'
+newuser.display_name = 'Michael'
+rick = query.get(1)
+rick.display_name = 'Richard'
+session.flush()					#ORM 안 쓸거면 session.flush() 해야 연결
+
+session.delete(newuser)
+session.commit()				#commit 하면 진짜 db에서 지워버림
