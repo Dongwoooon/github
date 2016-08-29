@@ -6,6 +6,7 @@ right_data = csv.reader(right_pointer, delimiter='\t', quotechar=' ')
 
 column = next(right_data)
 
+
 for i,x in enumerate(column):
 	print (i,x) 
 
@@ -15,7 +16,7 @@ print (indexes)
 column_name = list(column[i] for i in indexes)
 print(column_name)
 
-'''with open('grant_rawassignee_extracted.csv', "wb") as csvfile:
+with open('grant_rawassignee_extracted.csv', "wb") as csvfile:
     output = csv.writer(csvfile)
     output.writerow(column_name)
     
