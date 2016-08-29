@@ -1,20 +1,24 @@
-from pandas import Series, DataFrame
 
-kakao = Series([92600, 92400, 92100, 94300, 92300])
-print(kakao)
+# coding: utf-8
 
-kakao2 = Series([92600, 92400, 92100, 94300, 92300], index=['2016-02-19',
-                                                            '2016-02-18',
-                                                            '2016-02-17',
-                                                            '2016-02-16',
-                                                            '2016-02-15'])
-print(kakao2)
+# In[13]:
 
-raw_data = {'col0': [1, 2, 3, 4],
-            'col1': [10, 20, 30, 40],
-            'col2': [100, 200, 300, 400]}
+import pandas as pd 
 
-data = DataFrame(raw_data)
-print(data)
+data = pd.read_csv('C:/Users/Dongwoon/Dropbox/공부할거/코딩/파이썬/pandas/convenient_store.csv')   #csv를 dataframe 형태로 불러옴
+data.head(10)    # 괄호 안에 있는 수 만큼 row 보여줌
+data.info()      # data 정보 알려줌
 
-print('\x')
+
+# <class 'pandas.core.frame.DataFrame'> : data의 class는 dataframe임
+# 177 entries : row(observation) = 177
+# Data columns : column 이름들 
+# object, int64 : data type
+
+# In[18]:
+
+data.area          #area column의 data 줘
+data.company       #company column의 data 줘
+data.describe()    #숫자인 친구들 간단한 통계값 보여줘
+data.hourly_wage.describe()  #hourly_wage column의 간단한 통계값 보여줘
+
